@@ -74,7 +74,7 @@ int main(){
         cout<<"\n\n\n"<<endl;
         //se muestran las cartas
         mostrarCartas();    
-        cout<<"la longitud de la columna 7 es: "<<longitud;
+        cout<<""<<endl;
         //se da a escoger una opcion del menu
         mostrarMenu();
         //se verifica que las pilas diamantes, corazones, picas y treboles no tengan una longitud de 13
@@ -95,6 +95,8 @@ int main(){
                 contador++;
             }   
         }
+        aux = NULL;
+        delete aux;
         return contador;
     }
 
@@ -267,8 +269,12 @@ int main(){
                 carta.escribirCarta();
                 sacarCarta(aux);
             }
+            nodoPila = NULL;
+            aux = NULL;
+            delete nodoPila;
+            delete aux;
         }else{
-            cout<<"---";
+            cout<<"|---";
         }
     }
 
@@ -348,6 +354,7 @@ int main(){
             auxiliar->carta.escribirCarta();
             auxiliar->carta.setVisible(valor);
         }
+        auxiliar = NULL;
         delete auxiliar;
     }    
     
@@ -508,16 +515,25 @@ int main(){
                         agregarCartaA(colSalida, carta);
                     }
                 }else{
-                    if((auxiliar->carta.getValor())<(pilaDestino->carta.getValor())){
-                        if(compatiblesJuego((pilaDestino->carta.getTipo()), (auxiliar->carta.getTipo()))){
-                            while(!isEmpty(auxiliar)){
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colDestino, carta);
-                                huboMovimiento = true;
+                    if(!isEmpty(pilaDestino)){
+                        if((auxiliar->carta.getValor())<(pilaDestino->carta.getValor())){
+                            if(compatiblesJuego((pilaDestino->carta.getTipo()), (auxiliar->carta.getTipo()))){
+                                while(!isEmpty(auxiliar)){
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colDestino, carta);
+                                    huboMovimiento = true;
+                                }
+                            }else{
+                                cout<<"No es un movimiento valido.";
+                                while(!isEmpty(auxiliar)){
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colSalida, carta);
+                                }
                             }
                         }else{
-                            cout<<"No es un movimiento valido.";
+                            cout<<"No es un movimiento valido";
                             while(!isEmpty(auxiliar)){
                                 Carta carta = auxiliar->carta;
                                 sacarCarta(auxiliar);
@@ -525,11 +541,20 @@ int main(){
                             }
                         }
                     }else{
-                        cout<<"No es un movimiento valido";
-                        while(!isEmpty(auxiliar)){
-                            Carta carta = auxiliar->carta;
-                            sacarCarta(auxiliar);
-                            agregarCartaA(colSalida, carta);
+                        if((auxiliar->carta.getValor())==13){
+                            while(!isEmpty(auxiliar)){
+                                Carta carta = auxiliar->carta;
+                                sacarCarta(auxiliar);
+                                agregarCartaA(colDestino, carta);
+                                huboMovimiento = true;
+                            }    
+                        }else{
+                            cout<<"Solo se puede poner una K en una pila vacia.";
+                            while(!isEmpty(auxiliar)){
+                                Carta carta = auxiliar->carta;
+                                sacarCarta(auxiliar);
+                                agregarCartaA(colSalida, carta);
+                            }
                         }
                     }
                 }
@@ -538,6 +563,10 @@ int main(){
         if(huboMovimiento){
             voltearCartaDe(colSalida);
         }
+        pilaSalida = NULL;
+        pilaDestino = NULL;
+        delete pilaSalida;
+        delete pilaDestino; 
         delete auxiliar;
     }
 
@@ -705,18 +734,18 @@ int main(){
     void mostrarCartas(){
         Primero(columnas);
         if(isEmpty(banco)&&isEmpty(bancoVista)){
-            cout<<"---|(Col 0)---||||";
+            cout<<"---|(Col 0): ---||||";
         }
         if(isEmpty(banco)&&!isEmpty(bancoVista)){
-            cout<<"---|(Col 0)";
+            cout<<"---|(Col 0): ";
             bancoVista->carta.escribirCarta();
             cout<<"||||";
         }
         if(!isEmpty(banco)&&isEmpty(bancoVista)){
-            cout<<"###|(Col 0)---||||";
+            cout<<"###|(Col 0): ---||||";
         }
         if(!isEmpty(banco)&&!isEmpty(bancoVista)){
-            cout<<"###|(Col 0)";
+            cout<<"###|(Col 0): ";
             bancoVista->carta.escribirCarta();
             cout<<"||||";
         }
