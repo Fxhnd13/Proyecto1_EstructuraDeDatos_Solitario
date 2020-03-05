@@ -343,7 +343,7 @@ int main(){
         int cantidad;
         cin>>cantidad;
         NodoPila *auxiliar = getColumna(columna);
-        if(cantidadDeCartasValida(auxiliar, (cantidad))){
+        if(cantidad<longitud(auxiliar)){
             for (int i = 0; i < cantidad; i++)
             {
                 auxiliar = auxiliar->sig;
@@ -353,6 +353,8 @@ int main(){
             auxiliar->carta.setVisible(true);
             auxiliar->carta.escribirCarta();
             auxiliar->carta.setVisible(valor);
+        }else{
+            cout<<"La carta seleccionada no tiene un siguiente";
         }
         auxiliar = NULL;
         delete auxiliar;
