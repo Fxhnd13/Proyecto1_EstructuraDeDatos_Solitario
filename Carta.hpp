@@ -180,10 +180,6 @@ public:
     ~Carta() {}
 
     // métodos
-    int getColumna();
-    void setColumna(int);
-    int getFila();
-    void setFila(int);
     int getValor(void);
     void setValor(int);
     int getTipo(void);
