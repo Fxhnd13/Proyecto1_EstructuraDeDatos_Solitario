@@ -385,9 +385,77 @@ int main(){
                 sacarCartaDe(colSalida);
                 agregarCarta(auxiliar, tmp);
             }
-        }
-        if((colSalida==0)||(colSalida>7)){//si se saca del banco o de las pilas ordenadas
-            if(cantidad==1){//si solo saca una carta
+            if((colSalida==0)||(colSalida>7)){//si se saca del banco o de las pilas ordenadas
+                if(cantidad==1){//si solo saca una carta
+                    if(colDestino>7){//si se quiere mover a una de las pilas ordenadas
+                        int tipoDestino;
+                        switch(colDestino){
+                            case 8: tipoDestino = 0; break;
+                            case 9: tipoDestino = 1; break;
+                            case 10: tipoDestino = 2; break;
+                            case 11: tipoDestino = 3; break;
+                        }
+                        if((auxiliar->carta.getTipo())==tipoDestino){
+                            if(isEmpty(pilaDestino)){//si la pila destino esta vacia
+                                if(auxiliar->carta.getValor()==1){//si la carta es un As se apila
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colDestino, carta);
+                                    huboMovimiento = true;
+                                }else{//si la carta no es una as
+                                    cout<<"No se puede mover una carta que no sea un As a una pila ordenada vacia.";
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colSalida, carta);
+                                }
+                            }else{
+                                if((auxiliar->carta.getValor())>(pilaDestino->carta.getValor())){
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colDestino, carta);
+                                    huboMovimiento = true;
+                                }else{
+                                    cout<<"No se puede mover una carta que es menor a la pila.";
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colSalida, carta);
+                                }
+                            }
+                        }else{
+                            cout<<"No se puede mover la carta a las pilas ordenadas no son del mismo tipo.";
+                            Carta carta = auxiliar->carta;
+                            sacarCarta(auxiliar);
+                            agregarCartaA(colSalida, carta);
+                        }
+                    }else{//si se quiere mover a una de las pilas del juego principal
+                        if(compatiblesJuego(auxiliar->carta.getTipo(), (pilaDestino->carta.getTipo()))){//si son compatibles
+                            if((auxiliar->carta.getValor())<(pilaDestino->carta.getValor())){//si la carta a mover es menor que la carta en la cima se mueve
+                                Carta carta = auxiliar->carta;
+                                sacarCarta(auxiliar);
+                                agregarCartaA(colDestino, carta);
+                                huboMovimiento = true;
+                            }else{
+                                cout<<"No es un movimiento valido.";
+                                Carta carta = auxiliar->carta;
+                                sacarCarta(auxiliar);
+                                agregarCartaA(colSalida, carta);
+                            }
+                        }else{//si no son compatibles
+                            cout<<"No es un movimiento valido.";
+                            Carta carta = auxiliar->carta;
+                            sacarCarta(auxiliar);
+                            agregarCartaA(colSalida, carta);
+                        }
+                    }
+                }else{//si no se saca una sola carta
+                    cout<<"No se puede mover mas de una carta a las pilas ordenadas.";
+                    while(!isEmpty(auxiliar)){
+                        Carta carta = auxiliar->carta;
+                        sacarCarta(auxiliar);
+                        agregarCartaA(colSalida, carta);
+                    }
+                }
+            }else{//si se saca de cualquier otra pila que no sea el banco, o las pilas ordenadas
                 if(colDestino>7){//si se quiere mover a una de las pilas ordenadas
                     int tipoDestino;
                     switch(colDestino){
@@ -396,136 +464,75 @@ int main(){
                         case 10: tipoDestino = 2; break;
                         case 11: tipoDestino = 3; break;
                     }
-                    if((auxiliar->carta.getTipo())==tipoDestino){
-                        if(isEmpty(pilaDestino)){//si la pila destino esta vacia
-                            if(auxiliar->carta.getValor()==1){//si la carta es un As se apila
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colDestino, carta);
-                                huboMovimiento = true;
-                            }else{//si la carta no es una as
-                                cout<<"No se puede mover una carta que no sea un As a una pila ordenada vacia.";
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colSalida, carta);
-                            }
-                        }else{
-                            if((auxiliar->carta.getValor())>(pilaDestino->carta.getValor())){
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colDestino, carta);
-                                huboMovimiento = true;
-                            }else{
-                                cout<<"No se puede mover una carta que es menor a la pila.";
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colSalida, carta);
-                            }
-                        }
-                    }else{
-                        cout<<"No se puede mover la carta a las pilas ordenadas no son del mismo tipo.";
-                        Carta carta = auxiliar->carta;
-                        sacarCarta(auxiliar);
-                        agregarCartaA(colSalida, carta);
-                    }
-                }else{//si se quiere mover a una de las pilas del juego principal
-                    if(compatiblesJuego(auxiliar->carta.getTipo(), (pilaDestino->carta.getTipo()))){//si son compatibles
-                        if((auxiliar->carta.getValor())<(pilaDestino->carta.getValor())){//si la carta a mover es menor que la carta en la cima se mueve
-                            Carta carta = auxiliar->carta;
-                            sacarCarta(auxiliar);
-                            agregarCartaA(colDestino, carta);
-                            huboMovimiento = true;
-                        }else{
-                            cout<<"No es un movimiento valido.";
-                            Carta carta = auxiliar->carta;
-                            sacarCarta(auxiliar);
-                            agregarCartaA(colSalida, carta);
-                        }
-                    }else{//si no son compatibles
-                        cout<<"No es un movimiento valido.";
-                        Carta carta = auxiliar->carta;
-                        sacarCarta(auxiliar);
-                        agregarCartaA(colSalida, carta);
-                    }
-                }
-            }else{//si no se saca una sola carta
-                cout<<"No se puede mover mas de una carta a las pilas ordenadas.";
-                while(!isEmpty(auxiliar)){
-                    Carta carta = auxiliar->carta;
-                    sacarCarta(auxiliar);
-                    agregarCartaA(colSalida, carta);
-                }
-            }
-        }else{//si se saca de cualquier otra pila que no sea el banco, o las pilas ordenadas
-            if(colDestino>7){//si se quiere mover a una de las pilas ordenadas
-                int tipoDestino;
-                switch(colDestino){
-                    case 8: tipoDestino = 0; break;
-                    case 9: tipoDestino = 1; break;
-                    case 10: tipoDestino = 2; break;
-                    case 11: tipoDestino = 3; break;
-                }
-                if(cantidad==1){
-                    if(auxiliar->carta.getTipo()==tipoDestino){
-                        if(isEmpty(pilaDestino)){//si la pila destino esta vacia
-                            if(auxiliar->carta.getValor()==1){//si la carta es un As se apila
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colDestino, carta);
-                                huboMovimiento = true;
-                            }else{//si la carta no es una as
-                                cout<<"No se puede mover una carta que no sea un As a una pila ordenada vacia.";
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colSalida, carta);
-                            }
-                        }else{
-                            if((auxiliar->carta.getValor())>(pilaDestino->carta.getValor())){
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colDestino, carta);
-                                huboMovimiento = true;
-                            }else{
-                                cout<<"No se puede mover una carta que es menor a la pila.";
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colSalida, carta);
-                            }
-                        }
-                    }else{
-                        cout<<"No se puede mover la carta a las pilas ordenadas no son del mismo tipo.";
-                        Carta carta = auxiliar->carta;
-                        sacarCarta(auxiliar);
-                        agregarCartaA(colSalida, carta);
-                    }
-                }else{
-                    cout<<"No se puede mover mas de una carta a las pilas ordenadas.";
-                    while(!isEmpty(auxiliar)){
-                        Carta carta = auxiliar->carta;
-                        sacarCarta(auxiliar);
-                        agregarCartaA(colSalida, carta);
-                    }
-                }
-            }else{//si se quiere mover a una de las pilas del juego principal
-                if(colDestino==0){
-                    cout<<"No se pueden mover cartas al banco";
-                    while(!isEmpty(auxiliar)){
-                        Carta carta = auxiliar->carta;
-                        sacarCarta(auxiliar);
-                        agregarCartaA(colSalida, carta);
-                    }
-                }else{
-                    if(!isEmpty(pilaDestino)){
-                        if((auxiliar->carta.getValor())<(pilaDestino->carta.getValor())){
-                            if(compatiblesJuego((pilaDestino->carta.getTipo()), (auxiliar->carta.getTipo()))){
-                                while(!isEmpty(auxiliar)){
+                    if(cantidad==1){
+                        if(auxiliar->carta.getTipo()==tipoDestino){
+                            if(isEmpty(pilaDestino)){//si la pila destino esta vacia
+                                if(auxiliar->carta.getValor()==1){//si la carta es un As se apila
                                     Carta carta = auxiliar->carta;
                                     sacarCarta(auxiliar);
                                     agregarCartaA(colDestino, carta);
                                     huboMovimiento = true;
+                                }else{//si la carta no es una as
+                                    cout<<"No se puede mover una carta que no sea un As a una pila ordenada vacia.";
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colSalida, carta);
                                 }
                             }else{
-                                cout<<"No es un movimiento valido.";
+                                if((auxiliar->carta.getValor())>(pilaDestino->carta.getValor())){
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colDestino, carta);
+                                    huboMovimiento = true;
+                                }else{
+                                    cout<<"No se puede mover una carta que es menor a la pila.";
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colSalida, carta);
+                                }
+                            }
+                        }else{
+                            cout<<"No se puede mover la carta a las pilas ordenadas no son del mismo tipo.";
+                            Carta carta = auxiliar->carta;
+                            sacarCarta(auxiliar);
+                            agregarCartaA(colSalida, carta);
+                        }
+                    }else{
+                        cout<<"No se puede mover mas de una carta a las pilas ordenadas.";
+                        while(!isEmpty(auxiliar)){
+                            Carta carta = auxiliar->carta;
+                            sacarCarta(auxiliar);
+                            agregarCartaA(colSalida, carta);
+                        }
+                    }
+                }else{//si se quiere mover a una de las pilas del juego principal
+                    if(colDestino==0){
+                        cout<<"No se pueden mover cartas al banco";
+                        while(!isEmpty(auxiliar)){
+                            Carta carta = auxiliar->carta;
+                            sacarCarta(auxiliar);
+                            agregarCartaA(colSalida, carta);
+                        }
+                    }else{
+                        if(!isEmpty(pilaDestino)){
+                            if((auxiliar->carta.getValor())<(pilaDestino->carta.getValor())){
+                                if(compatiblesJuego((pilaDestino->carta.getTipo()), (auxiliar->carta.getTipo()))){
+                                    while(!isEmpty(auxiliar)){
+                                        Carta carta = auxiliar->carta;
+                                        sacarCarta(auxiliar);
+                                        agregarCartaA(colDestino, carta);
+                                        huboMovimiento = true;
+                                    }
+                                }else{
+                                    cout<<"No es un movimiento valido.";
+                                    while(!isEmpty(auxiliar)){
+                                        Carta carta = auxiliar->carta;
+                                        sacarCarta(auxiliar);
+                                        agregarCartaA(colSalida, carta);
+                                    }
+                                }
+                            }else{
+                                cout<<"No es un movimiento valido";
                                 while(!isEmpty(auxiliar)){
                                     Carta carta = auxiliar->carta;
                                     sacarCarta(auxiliar);
@@ -533,41 +540,36 @@ int main(){
                                 }
                             }
                         }else{
-                            cout<<"No es un movimiento valido";
-                            while(!isEmpty(auxiliar)){
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colSalida, carta);
-                            }
-                        }
-                    }else{
-                        if((auxiliar->carta.getValor())==13){
-                            while(!isEmpty(auxiliar)){
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colDestino, carta);
-                                huboMovimiento = true;
-                            }    
-                        }else{
-                            cout<<"Solo se puede poner una K en una pila vacia.";
-                            while(!isEmpty(auxiliar)){
-                                Carta carta = auxiliar->carta;
-                                sacarCarta(auxiliar);
-                                agregarCartaA(colSalida, carta);
+                            if((auxiliar->carta.getValor())==13){
+                                while(!isEmpty(auxiliar)){
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colDestino, carta);
+                                    huboMovimiento = true;
+                                }    
+                            }else{
+                                cout<<"Solo se puede poner una K en una pila vacia.";
+                                while(!isEmpty(auxiliar)){
+                                    Carta carta = auxiliar->carta;
+                                    sacarCarta(auxiliar);
+                                    agregarCartaA(colSalida, carta);
+                                }
                             }
                         }
                     }
-                }
-            }   
+                }   
+            }
+            if(huboMovimiento){
+                voltearCartaDe(colSalida);
+            }
+            pilaSalida = NULL;
+            pilaDestino = NULL;
+            delete pilaSalida;
+            delete pilaDestino; 
+            delete auxiliar;
+        }else{
+            cout<<"No se puede mover la cantidad de cartas que desea."<<endl;
         }
-        if(huboMovimiento){
-            voltearCartaDe(colSalida);
-        }
-        pilaSalida = NULL;
-        pilaDestino = NULL;
-        delete pilaSalida;
-        delete pilaDestino; 
-        delete auxiliar;
     }
 
     //metodo que retorna la pila que corresponde segun el numero de columna pasado de argumento;
@@ -617,18 +619,18 @@ int main(){
     //metodo que verifica que la cantidad de cartas que se desea mover se pueda mover
     bool cantidadDeCartasValida(NodoPila *&nodo, int cantidad){
         bool valor = true;
-        int iterador = cantidad-1;
-        NodoPila *aux = new NodoPila();
-        aux = nodo;
-        if(!isEmpty(aux)){
-            if(iterador==0){
-                if(!(aux->carta).getVisible())valor=false;
-            }else{
-                for (int i = 0; i < iterador; i++){
-                    aux = aux->sig;
-                    if(aux==NULL)break;
-                    if(!(aux->carta.getVisible()))valor=false;
-                }
+        if(!isEmpty(nodo)){
+            int cantidadCartasVolteadas = 0;
+            NodoPila *aux = nodo;
+            cantidadCartasVolteadas++;
+            while(aux->sig){
+                aux = aux->sig;
+                if(aux->carta.getVisible())cantidadCartasVolteadas++;
+            }   
+            aux = NULL;
+            delete aux;
+            if(cantidad>cantidadCartasVolteadas){
+                valor = false;
             }
         }else{
             valor = false;
